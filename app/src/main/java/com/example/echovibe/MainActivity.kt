@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import com.example.echovibe.ui.theme.EchoVibeTheme
+import com.example.echovibe.auth.Registration // Import the Registration composable
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,24 +79,7 @@ fun MainScreen() {
                 .padding(innerPadding),
             color = MaterialTheme.colorScheme.background
         ) {
-            Greeting(name = "Android")
+            Registration()
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        color = MaterialTheme.colorScheme.primary,
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    EchoVibeTheme {
-        Greeting("Android")
     }
 }
