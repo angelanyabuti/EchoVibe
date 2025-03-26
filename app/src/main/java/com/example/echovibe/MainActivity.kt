@@ -15,9 +15,16 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
 import kotlinx.coroutines.delay
 import com.example.echovibe.ui.theme.EchoVibeTheme
 import com.example.echovibe.auth.Registration // Import the Registration composable
+import com.example.echovibe.routes.Routes
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.composable
+import com.example.echovibe.auth.Login
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,6 +79,7 @@ fun AnimatedSplashTransition() {
 
 @Composable
 fun MainScreen() {
+
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Surface(
             modifier = Modifier
@@ -79,7 +87,16 @@ fun MainScreen() {
                 .padding(innerPadding),
             color = MaterialTheme.colorScheme.background
         ) {
-            Registration()
+            val  navController = rememberNavController()
+            NavHost(navController = navController, startDestination = Routes.Registration.route) {
+                composable(Routes.Registration.route) {
+                    Registration(navController = navController)
+                }
+                composable(Routes.Login.route) {  // Ensure this exists
+                    Login()
+                }
+            }
+            //Registration()
         }
     }
 }

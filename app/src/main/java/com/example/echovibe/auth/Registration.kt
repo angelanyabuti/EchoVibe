@@ -27,9 +27,14 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
 import com.example.echovibe.R
+import com.example.echovibe.auth.Login
+import com.example.echovibe.routes.Routes
+import androidx.navigation.NavHostController
+
+
 
 @Composable
-fun Registration(modifier: Modifier = Modifier) {
+fun Registration(modifier: Modifier = Modifier, navController: NavHostController) {
     var text by remember { mutableStateOf("") }
     Column (
         modifier = modifier
@@ -41,7 +46,8 @@ fun Registration(modifier: Modifier = Modifier) {
         Image(
             painter = painterResource(id = R.drawable.headphones),
             contentDescription = "",
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .size(60.dp)
         )
         Text(
@@ -73,7 +79,9 @@ fun Registration(modifier: Modifier = Modifier) {
         ElevatedButton(
             modifier = Modifier.padding(top = 12.dp),
 
-            onClick = {/*TODO*/})
+            onClick = {
+                navController.navigate(Routes.Login.route)
+            })
         {
             Text(
                 text = "Register",
