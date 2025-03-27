@@ -24,6 +24,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.example.echovibe.auth.Login
+import com.example.echovibe.pages.Home
 
 
 class MainActivity : ComponentActivity() {
@@ -93,7 +94,10 @@ fun MainScreen() {
                     Registration(navController = navController)
                 }
                 composable(Routes.Login.route) {  // Ensure this exists
-                    Login()
+                    Login(navController = navController)
+                }
+                composable(Routes.Home.route) {  // Ensure this exists
+                    Home()
                 }
             }
             //Registration()

@@ -87,8 +87,6 @@ fun Registration(modifier: Modifier = Modifier, navController: NavHostController
                 text = "Register",
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
             )
-
-
         }
 
     }
