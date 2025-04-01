@@ -53,7 +53,7 @@ fun Registration(modifier: Modifier = Modifier, navController: NavHostController
         Text(
             text = "Create Account",
             color = MaterialTheme.colorScheme.tertiary,
-            style = MaterialTheme.typography.titleLarge,
+            style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(bottom = 12.dp)
         )
         OutlinedTextField(
@@ -62,7 +62,7 @@ fun Registration(modifier: Modifier = Modifier, navController: NavHostController
             label = { Text(
                 "Enter your email",
                 color = MaterialTheme.colorScheme.tertiary,
-                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
             ) }
         )
         OutlinedTextField(

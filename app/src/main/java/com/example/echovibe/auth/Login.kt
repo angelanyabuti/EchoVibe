@@ -42,7 +42,7 @@ fun Login(modifier: Modifier = Modifier, navController: NavHostController) {
             label = { Text(
                 "Enter your email",
                 color = MaterialTheme.colorScheme.tertiary,
-                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
             ) }
         )
         OutlinedTextField(
@@ -51,7 +51,7 @@ fun Login(modifier: Modifier = Modifier, navController: NavHostController) {
             label = { Text(
                 "Enter your password",
                 color = MaterialTheme.colorScheme.tertiary,
-                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             ) },
             visualTransformation = PasswordVisualTransformation(), //hides the password
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
@@ -65,7 +65,7 @@ fun Login(modifier: Modifier = Modifier, navController: NavHostController) {
         {
             Text(
                 text = "Login",
-                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             )
         }
 
