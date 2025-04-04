@@ -34,6 +34,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.example.echovibe.auth.Login
 import com.example.echovibe.pages.Home
+import com.example.echovibe.pages.ProfileScreen
+import com.example.echovibe.pages.SearchScreen
 import com.example.echovibe.ui.theme.Black1
 
 
@@ -53,7 +55,6 @@ class MainActivity : ComponentActivity() {
                     delay(3000) // Show animation for 3 seconds
                     isSplashAnimationVisible = false
                 }
-
                 if (isSplashAnimationVisible) {
                     AnimatedSplashTransition()
                 } else {
@@ -104,20 +105,28 @@ fun MainScreen() {
                 .padding(innerPadding),
             color = MaterialTheme.colorScheme.background
         ) {
+            //nav graph
             NavHost(navController = navController, startDestination = Routes.Registration.route) {
                 composable(Routes.Registration.route) {
                     Registration(navController = navController)
                 }
-                composable(Routes.Login.route) {  // Ensure this exists
+                composable(Routes.Login.route) {
                     Login(navController = navController)
                 }
-                composable(Routes.Home.route) {  // Ensure this exists
+                composable(Routes.Home.route) {
                     Home()
+                }
+                composable(Routes.Search.route) {
+                    SearchScreen()
+                }
+                composable(Routes.Profile.route) {
+                    ProfileScreen()
                 }
             }
         }
     }
 }
+//Bottom app bar
 @Composable
 fun BottomAppBar(navController: NavHostController){
     val selected = remember { //shows what is selected
@@ -126,11 +135,11 @@ fun BottomAppBar(navController: NavHostController){
             BottomAppBar(
                 modifier = Modifier
                     .height(70.dp),
-                containerColor = MaterialTheme.colorScheme.onBackground, // Change to your desired color
+                containerColor = MaterialTheme.colorScheme.onBackground,
                 contentColor = MaterialTheme.colorScheme.onPrimary // Icon/Text color
             ) {
+                //Home
                 IconButton(
-                     //all icons are equally sized
                     onClick = {
                         selected.value = Icons.Default.Home
                         navController.navigate(Routes.Home.route){
@@ -138,6 +147,7 @@ fun BottomAppBar(navController: NavHostController){
 
                         }
                     },
+                    //all icons are equally sized
                     modifier = Modifier.weight(1f)
                         .padding(5.dp)
                         .clip(RoundedCornerShape(8.dp))
@@ -148,15 +158,15 @@ fun BottomAppBar(navController: NavHostController){
                         )
 
                 }
+                //Search
                 IconButton(
-                    //all icons are equally sized
                     onClick = {
-                        selected.value = Icons.Default.Home
-                        navController.navigate(Routes.Home.route){
+                        selected.value = Icons.Default.Search
+                        navController.navigate(Routes.Search.route){
                             popUpTo(0) //avoid multiple back button clicks
-
                         }
                     },
+                    //all icons are equally sized
                     modifier = Modifier.weight(1f)
                         .padding(5.dp)
                         .clip(RoundedCornerShape(8.dp))
@@ -167,15 +177,15 @@ fun BottomAppBar(navController: NavHostController){
                     )
 
                 }
+                //Favorites
                 IconButton(
-                    //all icons are equally sized
                     onClick = {
-                        selected.value = Icons.Default.Home
+                        selected.value = Icons.Default.Favorite
                         navController.navigate(Routes.Home.route){
                             popUpTo(0) //avoid multiple back button clicks
-
                         }
                     },
+                    //all icons are equally sized
                     modifier = Modifier.weight(1f)
                         .padding(5.dp)
                         .clip(RoundedCornerShape(8.dp))
@@ -186,15 +196,16 @@ fun BottomAppBar(navController: NavHostController){
                     )
 
                 }
+                //Profile
                 IconButton(
-                    //all icons are equally sized
                     onClick = {
-                        selected.value = Icons.Default.Home
-                        navController.navigate(Routes.Home.route){
+                        selected.value = Icons.Default.Person
+                        navController.navigate(Routes.Profile.route){
                             popUpTo(0) //avoid multiple back button clicks
 
                         }
                     },
+                    //all icons are equally sized
                     modifier = Modifier.weight(1f)
                         .padding(5.dp)
                         .clip(RoundedCornerShape(8.dp))
