@@ -5,4 +5,17 @@
     <string name="party">Party</string>
     <string name="adventure">Adventure</string>
     <string name="study">Study</string>
+    <string name="CantStoptheFeeling">Can’t Stop the Feeling!</string>
+    <string name="Levitating">Levitating</string>
+    <string name="Dua">Dua Lipa</string>
+    <string name="DuaLipa">DUA LIPA</string>
+    <string name="HappyNow">Happy Now</string>
+    <string name="Zedd">ZEDD</string>
+    <string name="PartyRock">Party Rock</string>
+    <string name="LMFAO">LMFAO</string>
+    <string name="OnTopOfTheWorld">On top of the world</string>
+    <string name="ImagineDragons">IMAGINE DRAGONS</string>
+    <string name="LoFiBeats">LoFi Beats</string>
+    <string name="Unknown">UNKNOWN</string>
+    <string name="Pharell">PHARRELL WIL...</string>
 </resources>
