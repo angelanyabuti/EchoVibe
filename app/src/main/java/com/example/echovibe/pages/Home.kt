@@ -48,12 +48,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.echovibe.R
 import com.example.echovibe.ui.theme.LocalAppGradients
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import androidx.compose.ui.platform.LocalContext
 
 
 private val RecentlyPlayedData = listOf(
@@ -217,8 +221,10 @@ fun MoodBodyElement(
             horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
-        Image(
-            painter = painterResource(drawable),
+        AsyncImage(
+            model =ImageRequest.Builder(LocalContext.current)
+                .data(drawable)
+                .build(),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -281,8 +287,10 @@ fun TodayMoodElement(
         horizontalAlignment = Alignment.CenterHorizontally
 
     ){
-        Image(
-            painter = painterResource(drawable),
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(drawable)
+                .build(),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
