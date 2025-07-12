@@ -70,17 +70,19 @@ private val RecentlyPlayedData = listOf(
     DrawableStringPair(it.first, it.second)
 }
 data class MoodItem(
+    val id: Int,
     @DrawableRes val drawable: Int,
     @StringRes val songTitle: Int,
-    @StringRes val artist: Int
+    @StringRes val artist: Int,
+
 )
 
 private val TodaysMood = listOf(
-    MoodItem(R.drawable.happysong, R.string.happy, R.string.Pharell),
-    MoodItem(R.drawable.happy, R.string.HappyNow, R.string.Zedd),
-    MoodItem(R.drawable.party, R.string.PartyRock, R.string.LMFAO),
-    MoodItem(R.drawable.adventure, R.string.OnTopOfTheWorld, R.string.ImagineDragons),
-    MoodItem(R.drawable.study, R.string.LoFiBeats, R.string.Unknown)
+    MoodItem(1, R.drawable.happysong, R.string.happy, R.string.Pharell),
+    MoodItem(2, R.drawable.happy, R.string.HappyNow, R.string.Zedd),
+    MoodItem(3, R.drawable.party, R.string.PartyRock, R.string.LMFAO),
+    MoodItem(4, R.drawable.adventure, R.string.OnTopOfTheWorld, R.string.ImagineDragons),
+    MoodItem(5, R.drawable.study, R.string.LoFiBeats, R.string.Unknown)
 )
 
 
@@ -221,6 +223,7 @@ fun MoodBodyElement(
             horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
+        //AsyncImage to optimize images
         AsyncImage(
             model =ImageRequest.Builder(LocalContext.current)
                 .data(drawable)
@@ -260,7 +263,7 @@ fun TodayMood(modifier: Modifier = Modifier){
         contentPadding = PaddingValues(horizontal = 16.dp),
         modifier = Modifier
     ){
-        items(TodaysMood) { mood ->
+        items(TodaysMood, key= {mood -> mood.id}) { mood ->
             TodayMoodElement(
                 drawable = mood.drawable,
                 songTitle = mood.songTitle,
