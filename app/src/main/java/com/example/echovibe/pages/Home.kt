@@ -40,6 +40,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -69,6 +70,7 @@ private val RecentlyPlayedData = listOf(
 ).map {
     DrawableStringPair(it.first, it.second)
 }
+@Immutable
 data class MoodItem(
     val id: Int,
     @DrawableRes val drawable: Int,
