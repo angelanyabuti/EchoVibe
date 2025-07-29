@@ -76,7 +76,6 @@ data class MoodItem(
     @DrawableRes val drawable: Int,
     @StringRes val songTitle: Int,
     @StringRes val artist: Int,
-
 )
 
 private val TodaysMood = listOf(
