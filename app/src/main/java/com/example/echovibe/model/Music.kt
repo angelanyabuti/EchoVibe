@@ -1,6 +1,6 @@
 package com.example.echovibe.model
 
-data class TodaysMood(
+data class Music(
     val id: String,
     val song: String,
     val artist: String,
