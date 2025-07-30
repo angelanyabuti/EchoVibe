@@ -1,4 +1,4 @@
-package com.example.echovibe.model
+package com.example.echovibe.data
 
 data class Music(
     val id: String,
