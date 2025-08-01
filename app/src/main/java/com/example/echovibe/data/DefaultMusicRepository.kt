@@ -1,6 +1,6 @@
 package com.example.echovibe.data
 
-import com.example.echovibe.data.network.NetworkDataSource
+import com.example.echovibe.data.source.network.NetworkDataSource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton

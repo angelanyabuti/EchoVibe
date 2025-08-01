@@ -1,4 +1,4 @@
-package com.example.echovibe.data.network
+package com.example.echovibe.data.source.network
 
 import com.example.echovibe.data.Music
 import kotlinx.coroutines.flow.Flow

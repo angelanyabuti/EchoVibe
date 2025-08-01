@@ -66,6 +66,8 @@ dependencies {
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     implementation ("androidx.compose.material:material-icons-extended")
     implementation("io.coil-kt:coil-compose:2.5.0")
+    implementation("com.google.firebase:firebase-firestore-ktx:24.10.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     testImplementation(libs.junit)
