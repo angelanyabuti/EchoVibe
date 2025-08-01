@@ -1,5 +1,7 @@
 package com.example.echovibe.data
 
+import com.example.echovibe.data.network.NetworkDataSource
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -8,4 +10,12 @@ import javax.inject.Singleton
  */
 
 @Singleton
-class DefaultMusicRepository @Inject constructor()
+class DefaultMusicRepository @Inject constructor(
+    private val networkDataSource: NetworkDataSource,
+) : MusicRepository {
+
+    override fun getMusic(): Flow<List<Music>> {
+        return networkDataSource.getMusic()
+
+    }
+}
