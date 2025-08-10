@@ -5,6 +5,7 @@
 - **Language**: Kotlin
 - **UI Toolkit**: Jetpack Compose
 - **Architecture**: MVVM
-- **Backend**: Firebase / REST API (specify if applicable)
-- **Music API**: Spotify API / YouTube API (optional)
-- **State Management**: ViewModel, LiveData/StateFlow
+- **Backend**: Firebase
+- **State Management**: ViewModel, LiveData
+
+## Screenshots
