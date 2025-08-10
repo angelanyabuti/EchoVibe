@@ -10,3 +10,4 @@
 
 ## Screenshots
 <a target="_blank" rel="noopener noreferrer" href="/screenshots/screenshot 1.jpeg"><img src="/screenshots/screenshot 1.jpeg" alt="Screenshot" style="max-width: 100%;"></a>
+<a target="_blank" rel="noopener noreferrer" href="/screenshots/screenshot 1.jpeg"><img src="/screenshots/screenshot 1.jpeg" alt="Screenshot" style="max-width: 100%;"></a>
