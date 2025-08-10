@@ -9,4 +9,4 @@
 - **State Management**: ViewModel, LiveData
 
 ## Screenshots
-<a target="_blank" rel="noopener noreferrer" href="/angelanyabuti/EchoVibe/main/screenshots/screenshot 1.png"><img src="/angelanyabuti/EchoVibe/raw/main/screenshots/screenshot 1.png" alt="Screenshot" style="max-width: 100%;"></a>
+<a target="_blank" rel="noopener noreferrer" href="/angelanyabuti/EchoVibe/blob/main/screenshots/screenshot 1.jpeg"><img src="/angelanyabuti/EchoVibe/blob/main/screenshots/screenshot 1.jpeg" alt="Screenshot" style="max-width: 100%;"></a>
