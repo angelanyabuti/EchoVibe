@@ -7,3 +7,5 @@
 - **Architecture**: MVVM
 - **Backend**: Firebase
 - **State Management**: ViewModel, LiveData
+
+## Screenshots
