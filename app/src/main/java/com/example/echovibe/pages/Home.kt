@@ -1,13 +1,9 @@
 package com.example.echovibe.pages
 
-import android.graphics.drawable.Icon
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.FlingBehavior
-import androidx.compose.foundation.gestures.ScrollScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,7 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -41,24 +37,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.echovibe.R
 import com.example.echovibe.ui.theme.LocalAppGradients
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import androidx.compose.ui.platform.LocalContext
+import com.example.echovibe.viewModels.MusicViewModel
 
 
 private val RecentlyPlayedData = listOf(
@@ -251,7 +246,8 @@ fun MoodBodyElement(
 //Todays mood
 @Preview(showBackground = true)
 @Composable
-fun TodayMood(modifier: Modifier = Modifier){
+fun TodayMood(modifier: Modifier = Modifier, viewModel: MusicViewModel = hiltViewModel()){
+    val tracks by viewModel.tracks.collectAsState()
     Text(
         text = "Most people are feeling happy today",
         color = MaterialTheme.colorScheme.secondary,
@@ -264,22 +260,19 @@ fun TodayMood(modifier: Modifier = Modifier){
         contentPadding = PaddingValues(horizontal = 16.dp),
         modifier = Modifier
     ){
-        items(TodaysMood, key= {mood -> mood.id}) { mood ->
-            TodayMoodElement(
-                drawable = mood.drawable,
-                songTitle = mood.songTitle,
-                artist = mood.artist
-            )
+        itemsIndexed(tracks, key = { index, _ -> index }) { _, track ->
+            TodayMoodElement(songTitle = track.name)
         }
+
     }
 }
 
-//Todays mood element
+//Today's mood element
 @Composable
 fun TodayMoodElement(
-    @DrawableRes drawable: Int,
-    @StringRes songTitle: Int,
-    @StringRes artist: Int,
+   // @DrawableRes drawable: Int,
+     songTitle: String,
+    //@StringRes artist: Int,
     modifier: Modifier = Modifier){
     val gradients = LocalAppGradients.current
     Column (
@@ -291,7 +284,7 @@ fun TodayMoodElement(
         horizontalAlignment = Alignment.CenterHorizontally
 
     ){
-        AsyncImage(
+        /*AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(drawable)
                 .build(),
@@ -301,7 +294,7 @@ fun TodayMoodElement(
                 .size(150.dp)
                 .padding(vertical = 10.dp)
                 .clip(CircleShape)
-        )
+        )*/
         //play button
         ElevatedButton(
             modifier = Modifier
@@ -322,7 +315,7 @@ fun TodayMoodElement(
         ) {
             Row {
                 Column {
-                    Text(
+                    /*Text(
                         text = stringResource(artist),
                         modifier = Modifier
                             .paddingFromBaseline(
@@ -331,9 +324,9 @@ fun TodayMoodElement(
                             .padding(end = 5.dp),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.primary
-                    )
+                    )*/
                     Text(
-                        text = stringResource(songTitle),
+                        text = (songTitle),
                         modifier = Modifier
                             .paddingFromBaseline(
                                 top = 24.dp, bottom = 8.dp

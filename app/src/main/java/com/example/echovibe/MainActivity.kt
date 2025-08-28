@@ -40,7 +40,11 @@ import com.example.echovibe.pages.Home
 import com.example.echovibe.pages.ProfileScreen
 import com.example.echovibe.pages.SearchScreen
 import com.example.echovibe.ui.theme.Black1
+import com.google.firebase.FirebaseApp
+import dagger.hilt.android.AndroidEntryPoint
 
+
+@AndroidEntryPoint
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +53,7 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
+        FirebaseApp.initializeApp(this)
         setContent {
             EchoVibeTheme(darkTheme = false, dynamicColor = false) {
                 var isSplashAnimationVisible by remember { mutableStateOf(true) }

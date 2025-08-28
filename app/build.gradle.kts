@@ -4,6 +4,7 @@ plugins {
     id("com.google.dagger.hilt.android")
     kotlin("kapt")
     id("com.google.secrets_gradle_plugin") version "0.4"
+    id("com.google.gms.google-services")
 
 }
 
@@ -70,6 +71,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.5.0")
     implementation("com.google.firebase:firebase-firestore-ktx:24.10.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+    implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     testImplementation(libs.junit)
