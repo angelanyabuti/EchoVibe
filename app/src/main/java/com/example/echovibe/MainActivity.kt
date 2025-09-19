@@ -34,11 +34,15 @@ import com.example.echovibe.auth.Registration // Import the Registration composa
 import com.example.echovibe.routes.Routes
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.echovibe.auth.Login
 import com.example.echovibe.pages.Home
+import com.example.echovibe.pages.NowPlayingScreen
 import com.example.echovibe.pages.ProfileScreen
 import com.example.echovibe.pages.SearchScreen
+import com.example.echovibe.pages.TodayMood
 import com.example.echovibe.ui.theme.Black1
 import com.google.firebase.FirebaseApp
 import dagger.hilt.android.AndroidEntryPoint
@@ -86,7 +90,7 @@ fun AnimatedSplashTransition() {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        // Just fade in the transition, no need for an extra logo
+        // fade in transition
         Box(
             modifier = Modifier
                 .size(200.dp)
@@ -121,13 +125,23 @@ fun MainScreen() {
                     Login(navController = navController)
                 }
                 composable(Routes.Home.route) {
-                    Home()
+                    Home(navController = navController)
                 }
                 composable(Routes.Search.route) {
                     SearchScreen()
                 }
                 composable(Routes.Profile.route) {
                     ProfileScreen()
+                }
+                composable(Routes.TodayMood.route) {
+                    TodayMood(navController = navController)
+                }
+                composable(
+                    route = Routes.NowPlaying.route,
+                    arguments = listOf(navArgument("trackName") { type = NavType.StringType })
+                ) { backStackEntry ->
+                    val trackName = backStackEntry.arguments?.getString("trackName") ?: ""
+                    NowPlayingScreen(navController = navController, trackName = trackName)
                 }
             }
         }
@@ -155,7 +169,8 @@ fun BottomAppBar(navController: NavHostController){
                         }
                     },
                     //all icons are equally sized
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
                         .padding(5.dp)
                         .clip(RoundedCornerShape(8.dp))
                         .background(MaterialTheme.colorScheme.background)
@@ -174,7 +189,8 @@ fun BottomAppBar(navController: NavHostController){
                         }
                     },
                     //all icons are equally sized
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
                         .padding(5.dp)
                         .clip(RoundedCornerShape(8.dp))
                         .background(MaterialTheme.colorScheme.background)
@@ -193,7 +209,8 @@ fun BottomAppBar(navController: NavHostController){
                         }
                     },
                     //all icons are equally sized
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
                         .padding(5.dp)
                         .clip(RoundedCornerShape(8.dp))
                         .background(MaterialTheme.colorScheme.background)
@@ -213,7 +230,8 @@ fun BottomAppBar(navController: NavHostController){
                         }
                     },
                     //all icons are equally sized
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
                         .padding(5.dp)
                         .clip(RoundedCornerShape(8.dp))
                         .background(MaterialTheme.colorScheme.background)

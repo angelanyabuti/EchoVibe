@@ -1,5 +1,6 @@
 package com.example.echovibe.pages
 
+import android.content.Intent
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
@@ -48,12 +49,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.echovibe.R
 import com.example.echovibe.ui.theme.LocalAppGradients
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.echovibe.routes.Routes
 import com.example.echovibe.viewModels.MusicViewModel
+
 
 
 private val RecentlyPlayedData = listOf(
@@ -72,22 +81,12 @@ data class MoodItem(
     @StringRes val songTitle: Int,
     @StringRes val artist: Int,
 )
-
-private val TodaysMood = listOf(
-    MoodItem(1, R.drawable.happysong, R.string.happy, R.string.Pharell),
-    MoodItem(2, R.drawable.happy, R.string.HappyNow, R.string.Zedd),
-    MoodItem(3, R.drawable.party, R.string.PartyRock, R.string.LMFAO),
-    MoodItem(4, R.drawable.adventure, R.string.OnTopOfTheWorld, R.string.ImagineDragons),
-    MoodItem(5, R.drawable.study, R.string.LoFiBeats, R.string.Unknown)
-)
-
-
 private data class DrawableStringPair(
     @DrawableRes val drawable: Int,
     @StringRes val text: Int
 )
 @Composable
-fun Home(){
+fun Home(navController: NavHostController){
     Column(modifier = Modifier
         .fillMaxSize()
         .padding(8.dp)
@@ -172,9 +171,42 @@ fun Home(){
         Spacer(modifier = Modifier.height(12.dp))
         RecentlyPlayed()
         Spacer(modifier = Modifier.height(12.dp))
-        TodayMood()
+        TodayMood(navController = navController)
         Spacer(modifier = Modifier.height(12.dp))
         CuratedPlaylist()
+
+        @Composable
+        fun TodayMood(
+            modifier: Modifier = Modifier, viewModel: MusicViewModel = hiltViewModel(),
+            navController: NavController = rememberNavController()
+
+        ){
+
+            val tracks by viewModel.tracks.collectAsState()
+            Text(
+                text = "Most people are feeling happy today",
+                color = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier.padding(horizontal = 5.dp),
+                style = MaterialTheme.typography.titleMedium
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                modifier = Modifier
+            ){
+
+                itemsIndexed(tracks, key = { index, _ -> index }) { _, track ->
+                    TodayMoodElement(
+                        songTitle = track.name,
+                        onClick = {
+                            navController.navigate("nowPlaying/${track.name}")
+                        })
+                }
+
+            }
+
+        }
 
     }
 }
@@ -244,9 +276,13 @@ fun MoodBodyElement(
 }
 
 //Todays mood
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
-fun TodayMood(modifier: Modifier = Modifier, viewModel: MusicViewModel = hiltViewModel()){
+fun TodayMood(
+    modifier: Modifier = Modifier, viewModel: MusicViewModel = hiltViewModel(),
+    navController: NavHostController,
+    ){
+
     val tracks by viewModel.tracks.collectAsState()
     Text(
         text = "Most people are feeling happy today",
@@ -260,16 +296,25 @@ fun TodayMood(modifier: Modifier = Modifier, viewModel: MusicViewModel = hiltVie
         contentPadding = PaddingValues(horizontal = 16.dp),
         modifier = Modifier
     ){
+
         itemsIndexed(tracks, key = { index, _ -> index }) { _, track ->
-            TodayMoodElement(songTitle = track.name)
+            TodayMoodElement(
+                songTitle = track.name,
+                onClick = {
+                    navController.navigate(Routes.NowPlaying.createRoute(track.name))
+                })
         }
 
     }
+
 }
+
+
 
 //Today's mood element
 @Composable
 fun TodayMoodElement(
+    onClick: () -> Unit ,
    // @DrawableRes drawable: Int,
      songTitle: String,
     //@StringRes artist: Int,
@@ -281,7 +326,7 @@ fun TodayMoodElement(
             .clip(RoundedCornerShape(8.dp))
             .background(gradients.primaryGradient)
             .padding(5.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
 
     ){
         /*AsyncImage(
@@ -302,7 +347,7 @@ fun TodayMoodElement(
                 .height(70.dp)
                 .padding(horizontal = 5.dp, vertical = 2.dp),
             shape = RoundedCornerShape(8.dp),
-            onClick = { /*TODO*/ },
+            onClick = onClick,
             colors = ButtonDefaults.elevatedButtonColors(
                 containerColor = Color.Transparent,
                 contentColor = MaterialTheme.colorScheme.primary //text/icon color
