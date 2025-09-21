@@ -14,7 +14,7 @@
   <table>
     <tr>
       <td align="center">
-        <a target="_blank" rel="noopener noreferrer" href="/screenshots/screenshot 2.jpeg"><img src="/screenshots/screenshot 2.jpeg" alt="Screenshot" style="max-width: 100%;"></a>
+        <a target="_blank" rel="noopener noreferrer" href="/screenshots/screenshot 2.jpeg"><img src="/screenshots/screenshot 2.jpeg" alt="Screenshot"></a>
         <br/>
         <sub>🎵 Home Screen</sub>
       </td>
