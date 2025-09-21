@@ -36,6 +36,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.example.echovibe.auth.Login
 import com.example.echovibe.pages.Home
@@ -104,9 +105,13 @@ fun AnimatedSplashTransition() {
 fun MainScreen() {
     val navController = rememberNavController()
     val currentRoute by remember { mutableStateOf("") }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination?.route
 
     Scaffold(modifier = Modifier.fillMaxSize(),
-        bottomBar = { if (currentRoute != Routes.Login.route && currentRoute != Routes.Registration.route) {
+        bottomBar = { if (currentDestination != Routes.Login.route &&
+            currentDestination != Routes.Registration.route &&
+            !currentDestination.orEmpty().startsWith(Routes.NowPlaying.route)) {
             BottomAppBar(navController)
         } }
         ) { innerPadding ->
