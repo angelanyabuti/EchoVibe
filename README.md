@@ -8,6 +8,22 @@
 - **Backend**: Firebase
 - **State Management**: ViewModel, LiveData
 
-## Screenshots
-<a target="_blank" rel="noopener noreferrer" href="/screenshots/screenshot 2.jpeg"><img src="/screenshots/screenshot 2.jpeg" alt="Screenshot" style="max-width: 100%;"></a>
-<a target="_blank" rel="noopener noreferrer" href="/screenshots/screenshot 1.jpeg"><img src="/screenshots/screenshot 1.jpeg" alt="Screenshot" style="max-width: 100%;"></a>
+## 📱 Screenshots
+
+<p align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <a target="_blank" rel="noopener noreferrer" href="/screenshots/screenshot 2.jpeg"><img src="/screenshots/screenshot 2.jpeg" alt="Screenshot"></a>
+        <br/>
+        <sub>🎵 Home Screen</sub>
+      </td>
+      <td align="center">
+        <img src="/screenshots/screenshot2.jpeg" alt="Now Playing Screen" width="250"/>
+        <br/>
+        <sub>🎧 Now Playing</sub>
+      </td>
+    </tr>
+  </table>
+</p>
+
