@@ -1,5 +1,7 @@
 package com.example.echovibe.pages
 
+import android.os.Looper.prepare
+import androidx.annotation.OptIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -15,14 +17,47 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.ui.compose.state.rememberPlayPauseButtonState
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.echovibe.R
 
+/*
+* This is the Now Playing Screen
+* Created using the media3 Exoplayer
+* */
 @Composable
 fun NowPlayingScreen(navController: NavHostController, trackName: String) {
+
+    val context = LocalContext.current
+
+    //Creating the Exoplayer
+    val exoPlayer = remember {
+        //creating the Exoplayer instance
+        ExoPlayer.Builder(context).build().apply {
+            val mediaItem = MediaItem.fromUri("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3") //preparing the player by adding media items
+            setMediaItem(mediaItem) //preparing the player by adding media items
+            prepare() //Starts the media loading
+
+        }
+    }
+
+    /***
+     * Release the player when leaving the screen or closing the app
+     * Playback requires resources that might be limited
+     * Releasing the player can help prevent the battery from draining and other apps from crashing
+     */
+
+    DisposableEffect(Unit) {
+        onDispose { exoPlayer.release()  }
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -35,7 +70,7 @@ fun NowPlayingScreen(navController: NavHostController, trackName: String) {
         songCard(trackName = trackName)
 
         // Progress bar + playback controls
-        seekbar()
+        seekbar(player = exoPlayer)
 
         // Extra controls (shuffle, repeat, etc.)
         bottomControls()
@@ -88,8 +123,10 @@ fun songCard(
 }
 
 //Seekbar
+@OptIn(UnstableApi::class)
 @Composable
-fun seekbar() {
+fun seekbar(player: Player) {
+    val state = rememberPlayPauseButtonState(player)
     var sliderPosition by remember { mutableStateOf(30f) }
 
     Column(
@@ -129,14 +166,17 @@ fun seekbar() {
                 Icon(Icons.Default.SkipPrevious, contentDescription = "Previous", tint = Color.White, modifier = Modifier.size(40.dp))
             }
 
+            //PlayPauseButtonState
             IconButton(
-                onClick = { /* TODO: Play/Pause */ },
+                onClick = state::onClick, enabled = state.isEnabled,
                 modifier = Modifier
                     .size(80.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.secondary)
             ) {
-                Icon(Icons.Default.PlayArrow, contentDescription = "Play", tint = Color.White, modifier = Modifier.size(50.dp))
+                Icon(
+                    imageVector = if (state.showPlay) Icons.Default.PlayArrow else Icons.Default.Pause,
+                    contentDescription = "Play", tint = Color.White, modifier = Modifier.size(50.dp))
             }
 
             IconButton(onClick = { /* TODO: Next */ }) {
