@@ -7,6 +7,7 @@
 - **Architecture**: MVVM
 - **Backend**: Firebase
 - **State Management**: ViewModel, LiveData
+- **Playback**: Media3 ExoPlayer
 
 ## 📱 Screenshots
 
