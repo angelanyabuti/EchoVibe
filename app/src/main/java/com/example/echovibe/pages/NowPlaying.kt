@@ -28,6 +28,7 @@ import androidx.media3.ui.compose.state.rememberPlayPauseButtonState
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.echovibe.R
+import kotlinx.coroutines.delay
 
 /*
 * This is the Now Playing Screen
@@ -115,7 +116,7 @@ fun songCard(
         )
 
         Text(
-            text = "LMFAO",
+            text = "Leona Lewis",
             style = MaterialTheme.typography.bodyMedium.copy(fontSize = 16.sp),
             color = MaterialTheme.colorScheme.secondary
         )
@@ -127,7 +128,19 @@ fun songCard(
 @Composable
 fun seekbar(player: Player) {
     val state = rememberPlayPauseButtonState(player)
-    var sliderPosition by remember { mutableStateOf(30f) }
+    val duration = player.duration.coerceAtLeast(0L)
+    var sliderPosition by remember { mutableStateOf(0f) }
+    var isDragging by remember { mutableStateOf(false) }
+
+    //updating the slider position as playback progresses
+    LaunchedEffect(player) {
+        while (true) {
+            if (!isDragging && player.isPlaying) {
+                sliderPosition = player.currentPosition.toFloat()
+            }
+            delay(500) //update every 0.5s
+        }
+    }
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -136,7 +149,14 @@ fun seekbar(player: Player) {
         Slider(
             value = sliderPosition,
             onValueChange = { sliderPosition = it },
-            valueRange = 0f..180f,
+            onValueChangeFinished = {
+                /**
+                 * Called when the user finished dragging the slider
+                 * Seek to a position in the current song
+                 * */
+                player.seekTo(sliderPosition.toLong()*1000)
+            },
+            valueRange = 0f..duration.toFloat(),
             modifier = Modifier.fillMaxWidth(),
             colors = SliderDefaults.colors(
                 thumbColor = MaterialTheme.colorScheme.secondary,
@@ -150,8 +170,8 @@ fun seekbar(player: Player) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = "${sliderPosition.toInt()} sec", color = Color.LightGray)
-            Text(text = "3:00", color = Color.LightGray)
+            Text(text = formatTime(sliderPosition.toLong()), color = Color.LightGray)
+            Text(text = formatTime(duration), color = Color.LightGray)
         }
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -204,3 +224,11 @@ fun bottomControls() {
         }
     }
 }
+
+fun formatTime(ms: Long): String {
+    val totalSeconds = ms / 1000
+    val minutes = totalSeconds / 60
+    val seconds = totalSeconds % 60
+    return "%d:%02d".format(minutes, seconds)  // e.g. 0:59 → 1:00 → 1:01
+}
+
