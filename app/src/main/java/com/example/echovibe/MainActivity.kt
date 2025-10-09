@@ -27,6 +27,8 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import kotlinx.coroutines.delay
 import com.example.echovibe.ui.theme.EchoVibeTheme
@@ -146,7 +148,7 @@ fun MainScreen() {
                     arguments = listOf(navArgument("trackName") { type = NavType.StringType })
                 ) { backStackEntry ->
                     val trackName = backStackEntry.arguments?.getString("trackName") ?: ""
-                    NowPlayingScreen(navController = navController, trackName = trackName)
+                    NowPlayingScreen(navController = navController, trackName = trackName, viewModel = hiltViewModel())
                 }
             }
         }

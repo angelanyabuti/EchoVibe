@@ -2,6 +2,7 @@ package com.example.echovibe.pages
 
 import android.os.Looper.prepare
 import androidx.annotation.OptIn
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -14,20 +15,26 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.compose.ui.geometry.Size
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.compose.state.rememberPlayPauseButtonState
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.echovibe.R
+import com.example.echovibe.viewModels.NowPlayingViewModel
 import kotlinx.coroutines.delay
 
 /*
@@ -35,30 +42,23 @@ import kotlinx.coroutines.delay
 * Created using the media3 Exoplayer
 * */
 @Composable
-fun NowPlayingScreen(navController: NavHostController, trackName: String) {
+fun NowPlayingScreen(navController: NavHostController, trackName: String, viewModel: NowPlayingViewModel = hiltViewModel()) {
 
     val context = LocalContext.current
 
     //Creating the Exoplayer
-    val exoPlayer = remember {
-        //creating the Exoplayer instance
-        ExoPlayer.Builder(context).build().apply {
-            val mediaItem = MediaItem.fromUri("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3") //preparing the player by adding media items
-            setMediaItem(mediaItem) //preparing the player by adding media items
-            prepare() //Starts the media loading
+    val exoPlayer = viewModel.exoPlayer
 
-        }
+    LaunchedEffect(Unit) {
+        viewModel.preloadTrack("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3")
     }
-
-    /***
-     * Release the player when leaving the screen or closing the app
-     * Playback requires resources that might be limited
-     * Releasing the player can help prevent the battery from draining and other apps from crashing
-     */
 
     DisposableEffect(Unit) {
-        onDispose { exoPlayer.release()  }
+        onDispose { exoPlayer.pause() } // keep it alive, don't release
     }
+
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -127,18 +127,24 @@ fun songCard(
 @OptIn(UnstableApi::class)
 @Composable
 fun seekbar(player: Player) {
-    val state = rememberPlayPauseButtonState(player)
-    val duration = player.duration.coerceAtLeast(0L)
+    val duration = player.duration.coerceAtLeast(1L)
     var sliderPosition by remember { mutableStateOf(0f) }
+    var bufferedPosition by remember { mutableStateOf(0f) }
     var isDragging by remember { mutableStateOf(false) }
+    var isPlaying by remember { mutableStateOf(player.isPlaying) }
 
-    //updating the slider position as playback progresses
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val bufferColor = MaterialTheme.colorScheme.secondary
+
+    // Keep UI synced with player
     LaunchedEffect(player) {
         while (true) {
-            if (!isDragging && player.isPlaying) {
+            if (!isDragging) {
                 sliderPosition = player.currentPosition.toFloat()
+                bufferedPosition = player.bufferedPosition.toFloat()
+                isPlaying = player.isPlaying
             }
-            delay(500) //update every 0.5s
+            delay(500)
         }
     }
 
@@ -146,26 +152,73 @@ fun seekbar(player: Player) {
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Slider(
-            value = sliderPosition,
-            onValueChange = { sliderPosition = it },
-            onValueChangeFinished = {
-                /**
-                 * Called when the user finished dragging the slider
-                 * Seek to a position in the current song
-                 * */
-                player.seekTo(sliderPosition.toLong()*1000)
-            },
-            valueRange = 0f..duration.toFloat(),
-            modifier = Modifier.fillMaxWidth(),
-            colors = SliderDefaults.colors(
-                thumbColor = MaterialTheme.colorScheme.secondary,
-                activeTrackColor = MaterialTheme.colorScheme.primary,
-                inactiveTrackColor = Color.Gray
-            )
-        )
+        // 🎚️ Seekbar (Buffered + Played + Thumb)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(8.dp)
+        ) {
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                val barHeight = size.height / 3
+                val yCenter = size.height / 2
 
-        // Time labels
+                // Unplayed
+                drawRoundRect(
+                    color = Color.Gray.copy(alpha = 0.3f),
+                    size = Size(width = size.width, height = barHeight),
+                    topLeft = Offset(0f, yCenter - barHeight / 2),
+                    cornerRadius = CornerRadius(100f)
+                )
+
+                // Buffered
+                val bufferedWidth = (bufferedPosition / duration) * size.width
+                drawRoundRect(
+                    color = Color.LightGray.copy(alpha = 0.7f),
+                    size = Size(width = bufferedWidth, height = barHeight),
+                    topLeft = Offset(0f, yCenter - barHeight / 2),
+                    cornerRadius = CornerRadius(100f)
+                )
+
+                // Played
+                val playedWidth = (sliderPosition / duration) * size.width
+                drawRoundRect(
+                    color = primaryColor,
+                    size = Size(width = playedWidth, height = barHeight),
+                    topLeft = Offset(0f, yCenter - barHeight / 2),
+                    cornerRadius = CornerRadius(100f)
+                )
+
+                // Thumb
+                val thumbX = playedWidth.coerceIn(0f, size.width)
+                drawCircle(
+                    color = bufferColor,
+                    radius = if (isDragging) 10.dp.toPx() else 6.dp.toPx(),
+                    center = Offset(thumbX, yCenter)
+                )
+            }
+
+            // Transparent slider overlay (for drag)
+            Slider(
+                value = sliderPosition,
+                onValueChange = {
+                    sliderPosition = it
+                    isDragging = true
+                },
+                onValueChangeFinished = {
+                    player.seekTo(sliderPosition.toLong())
+                    isDragging = false
+                },
+                valueRange = 0f..duration.toFloat(),
+                modifier = Modifier.fillMaxSize(),
+                colors = SliderDefaults.colors(
+                    thumbColor = Color.Transparent,
+                    activeTrackColor = Color.Transparent,
+                    inactiveTrackColor = Color.Transparent
+                )
+            )
+        }
+
+        // ⏱️ Time labels
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -176,35 +229,55 @@ fun seekbar(player: Player) {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Main Playback Controls
+        // 🎵 Playback Controls
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { /* TODO: Previous */ }) {
+            IconButton(onClick = { player.seekBack() }) {
                 Icon(Icons.Default.SkipPrevious, contentDescription = "Previous", tint = Color.White, modifier = Modifier.size(40.dp))
             }
 
-            //PlayPauseButtonState
             IconButton(
-                onClick = state::onClick, enabled = state.isEnabled,
+                onClick = {
+                    if (player.isPlaying) {
+                        player.pause()
+                    } else {
+                        player.play()
+                    }
+                    isPlaying = player.isPlaying
+                },
                 modifier = Modifier
                     .size(80.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.secondary)
             ) {
                 Icon(
-                    imageVector = if (state.showPlay) Icons.Default.PlayArrow else Icons.Default.Pause,
-                    contentDescription = "Play", tint = Color.White, modifier = Modifier.size(50.dp))
+                    imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
+                    contentDescription = "Play/Pause",
+                    tint = Color.White,
+                    modifier = Modifier.size(50.dp)
+                )
             }
 
-            IconButton(onClick = { /* TODO: Next */ }) {
+            IconButton(onClick = { player.seekForward() }) {
                 Icon(Icons.Default.SkipNext, contentDescription = "Next", tint = Color.White, modifier = Modifier.size(40.dp))
             }
         }
     }
 }
+
+
+fun formatTime(ms: Long): String {
+    val totalSeconds = ms / 1000
+    val minutes = totalSeconds / 60
+    val seconds = totalSeconds % 60
+    return String.format("%d:%02d", minutes, seconds)
+}
+
+
+
 
 //Bottom Control
 @Composable
@@ -225,10 +298,5 @@ fun bottomControls() {
     }
 }
 
-fun formatTime(ms: Long): String {
-    val totalSeconds = ms / 1000
-    val minutes = totalSeconds / 60
-    val seconds = totalSeconds % 60
-    return "%d:%02d".format(minutes, seconds)  // e.g. 0:59 → 1:00 → 1:01
-}
+
 
